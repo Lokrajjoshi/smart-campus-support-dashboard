@@ -79,6 +79,14 @@ def section_heading(icon: str, title: str, subtitle: str) -> None:
     st.markdown(f"<div class='section-heading'><h2>{icon} {title}</h2><p>{subtitle}</p></div>", unsafe_allow_html=True)
 
 
+def table_for_display(frame: pd.DataFrame) -> pd.DataFrame:
+    """Return a table copy with clear text instead of read-only checkboxes."""
+    display = frame.copy()
+    if "reopened" in display.columns:
+        display["reopened"] = display["reopened"].map({True: "Yes", False: "No"})
+    return display
+
+
 def polish_chart(figure, height: int = 390):
     """Give every Plotly chart the same clear light theme."""
     figure.update_layout(template="plotly_white", height=height, margin=dict(l=25,r=25,t=65,b=30), paper_bgcolor="#ffffff", plot_bgcolor="#ffffff", font=dict(color="#334155",family="Arial"), title_font=dict(color="#172033",size=17), legend_title_text="", hoverlabel=dict(bgcolor="white",font_color="#172033"))
@@ -119,8 +127,7 @@ with st.sidebar:
         label_visibility="collapsed",
     )
     st.markdown("---")
-    st.markdown("### System status")
-    st.success("● Dashboard online")
+    st.markdown("### Dataset status")
     st.write(f"**{len(df):,}** cases loaded")
     st.write(f"**{df.service.nunique()}** campus services")
     st.write(f"Updated **{datetime.now().strftime('%d %b %Y, %I:%M %p')}**")
@@ -194,7 +201,8 @@ if page == "🏠 Overview":
     p2.plotly_chart(polish_chart(risk_bar,330),width="stretch")
 
     section_heading("🚩","Resolved, but still a poor experience","Cases where operational closure hides student frustration")
-    st.dataframe(poor_resolved[["case_id","service","status","waiting_hours","handoffs","follow_ups","reopened","satisfaction","risk_level","risk_reasons"]].head(12),width="stretch",hide_index=True,column_config={"case_id":"Case ID","waiting_hours":st.column_config.NumberColumn("Wait (h)",format="%.1f"),"satisfaction":st.column_config.NumberColumn("Rating",format="%d ⭐"),"risk_level":"Risk"})
+    poor_display = table_for_display(poor_resolved[["case_id","service","status","waiting_hours","handoffs","follow_ups","reopened","satisfaction","risk_level","risk_reasons"]].head(12))
+    st.dataframe(poor_display,width="stretch",hide_index=True,column_config={"case_id":"Case ID","waiting_hours":st.column_config.NumberColumn("Wait (h)",format="%.1f"),"reopened":"Reopened?","satisfaction":st.column_config.NumberColumn("Rating",format="%d ⭐"),"risk_level":"Risk"})
 
 elif page == "🔎 Ticket Explorer":
     section_heading("🔎","Ticket Explorer","Search, filter and understand individual campus support cases")
@@ -202,7 +210,7 @@ elif page == "🔎 Ticket Explorer":
     m1,m2,m3,m4=st.columns(4)
     m1.metric("Matching cases",len(shown));m2.metric("Unresolved",int((~shown.status.isin(["Resolved","Closed"])).sum()));m3.metric("High risk",int((shown.risk_level=="High").sum()));m4.metric("Reopened",int(shown.reopened.sum()))
     columns=["case_id","created_at","service","category","priority","status","waiting_hours","resolution_hours","follow_ups","handoffs","reopened","satisfaction","risk_score","risk_level"]
-    st.dataframe(shown[columns],width="stretch",hide_index=True,column_config={"case_id":"Case ID","created_at":"Created","waiting_hours":st.column_config.NumberColumn("Wait (h)",format="%.1f"),"resolution_hours":st.column_config.NumberColumn("Resolution (h)",format="%.1f"),"risk_score":st.column_config.ProgressColumn("Risk score",min_value=0,max_value=100,format="%d")})
+    st.dataframe(table_for_display(shown[columns]),width="stretch",hide_index=True,column_config={"case_id":"Case ID","created_at":"Created","waiting_hours":st.column_config.NumberColumn("Wait (h)",format="%.1f"),"resolution_hours":st.column_config.NumberColumn("Resolution (h)",format="%.1f"),"reopened":"Reopened?","risk_score":st.column_config.ProgressColumn("Risk score",min_value=0,max_value=100,format="%d")})
     options=shown.case_id.tolist()
     if options:
         section_heading("🧭","Explain one case","Every risk level is supported by visible reasons")

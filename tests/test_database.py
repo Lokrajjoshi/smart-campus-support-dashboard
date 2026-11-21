@@ -15,6 +15,15 @@ def test_generator_is_reproducible_and_valid():
     assert first.loc[unresolved, "satisfaction"].isna().all()
 
 
+def test_generated_snapshot_respects_ticket_lifecycle():
+    frame = generate_cases(400)
+    resolved = frame.status.isin(["Resolved", "Closed"])
+    assert frame.loc[resolved, "resolved_at"].notna().all()
+    assert frame.loc[resolved, "resolution_hours"].notna().all()
+    assert (frame.loc[resolved, "resolution_hours"] >= frame.loc[resolved, "waiting_hours"]).all()
+    assert not frame.loc[~resolved, "reopened"].any()
+
+
 def test_new_case_persists(tmp_path):
     path = tmp_path / "test.db"
     initialise_database(path)

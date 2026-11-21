@@ -22,6 +22,7 @@ Why can students have a poor support experience even when their ticket is marked
 - Analyses waiting, handoffs, follow-ups, reopened cases and satisfaction.
 - Gives every case a transparent Low/Medium/High Student Experience Risk score.
 - Accepts new cases, validates them, persists them in SQLite and updates the app.
+- Shows reopened status as clear Yes/No text so read-only tables are not mistaken for editable forms.
 
 Covered services: Wi-Fi/IT, Academic/LMS, Library, Hostel, Transport, Fees, Classroom Facilities, Administration, ID Card and Examination Support.
 
@@ -30,6 +31,8 @@ Covered services: Wi-Fi/IT, Academic/LMS, Library, Hostel, Transport, Fees, Clas
 The baseline is a reproducible **synthetic dataset of 400 campus support cases**. It is not real CHRIST University operational data. It contains no student names, IDs, emails or phone numbers. The application asks users not to enter personal data.
 
 “Real-time” means live updates after a user submits a case: SQLite stores the record and the app reruns so its KPIs, explorer and charts include the new case. The project does **not** claim access to a university live feed.
+
+Each dataset row is a current ticket snapshot. The allowed lifecycle is `Open → In Progress → Resolved → Closed`; a reopened resolved case returns to active handling before it can be resolved again. The application validates lifecycle-dependent fields: unresolved cases have no resolution time or satisfaction, while resolved/closed cases have resolution details. A full event-history or staff administration system is intentionally outside this CIA dashboard's scope.
 
 ## Run locally
 
@@ -53,7 +56,7 @@ python data_generator.py
 pytest -q
 ```
 
-Tests check reproducible generation, valid status-dependent fields, risk boundaries, missing satisfaction, invalid service/category combinations and real database persistence.
+Tests check reproducible generation, lifecycle-consistent fields, risk boundaries, missing satisfaction, invalid service/category combinations and real database persistence.
 
 See `TESTING.md` for the verified results and `VIVA_PREPARATION.md` for concise presentation answers.
 

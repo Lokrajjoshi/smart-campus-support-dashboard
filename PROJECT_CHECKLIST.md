@@ -1,6 +1,6 @@
 # CIA 3 Requirement Checklist
 
-Verified from the supplied two-page CIA 3 PDF on 21 November 2026.
+Verified from the supplied CIA 3 PDF on 22 November 2026.
 
 - [x] CHRIST University environment application
 - [x] Python libraries and Streamlit
@@ -14,7 +14,7 @@ Verified from the supplied two-page CIA 3 PDF on 21 November 2026.
 - [x] Functional sidebar navigation with six distinct application screens
 - [x] Explainable CSS animation and subtle 3D interaction without unnecessary frameworks
 - [x] Explainable code, rule and README support the 5-mark viva criterion
-- [ ] Upload assignment folder to GitHub
+- [x] Upload assignment folder to GitHub
 - [ ] Submit GitHub link in Google Classroom
 - [ ] Deploy using Streamlit
 - [ ] Test and submit deployed Streamlit link in Google Classroom

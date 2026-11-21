@@ -1,6 +1,6 @@
 # Test Evidence
 
-Tested on 21 November 2026.
+Tested on 22 November 2026.
 
 ## Automated results
 
@@ -10,7 +10,7 @@ Command:
 pytest -q
 ```
 
-Result: **7 passed**.
+Result: **8 passed**.
 
 The automated suite verifies:
 
@@ -18,22 +18,24 @@ The automated suite verifies:
 2. case IDs are unique;
 3. only valid case statuses are generated;
 4. unresolved cases have no resolution time or satisfaction value;
-5. low-, medium- and high-risk scoring boundaries;
-6. missing satisfaction does not become a negative rating;
-7. a valid new case persists in SQLite; and
-8. an invalid service/category combination is rejected.
+5. resolved/closed snapshots contain consistent lifecycle fields;
+6. reopened flags are not assigned to unresolved snapshots;
+7. low-, medium- and high-risk scoring boundaries;
+8. missing satisfaction does not become a negative rating;
+9. a valid new case persists in SQLite; and
+10. an invalid service/category combination is rejected.
 
 ## Streamlit application test
 
 The application was run through Streamlit's application-testing framework.
 
 - Exceptions: **0**
-- Tabs detected: **6**
+- Navigation pages checked: **6**
 - Metrics detected: **16** across the app
 - Plotly charts detected: **10**
 - Data tables detected: **3**
 
-The enhanced interface was also checked for reliable light-mode contrast, sidebar rendering, six labelled navigation tabs, chart theming and responsive card layout.
+The enhanced interface was also checked for reliable light-mode contrast, sidebar rendering, six labelled navigation pages, chart theming and responsive card layout. Read-only reopened values are displayed as Yes/No text rather than misleading checkbox controls.
 
 The final navigation redesign was checked page by page: Overview, Ticket Explorer, Service Analytics, Experience Analytics, Raise New Case and About & Method all rendered with zero Streamlit exceptions. The pure-CSS Experience Pulse and card-depth effects do not change the analytical logic or database behaviour.
 
