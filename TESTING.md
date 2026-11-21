@@ -1,0 +1,66 @@
+# Test Evidence
+
+Tested on 21 November 2026.
+
+## Automated results
+
+Command:
+
+```bash
+pytest -q
+```
+
+Result: **7 passed**.
+
+The automated suite verifies:
+
+1. the synthetic generator is reproducible;
+2. case IDs are unique;
+3. only valid case statuses are generated;
+4. unresolved cases have no resolution time or satisfaction value;
+5. low-, medium- and high-risk scoring boundaries;
+6. missing satisfaction does not become a negative rating;
+7. a valid new case persists in SQLite; and
+8. an invalid service/category combination is rejected.
+
+## Streamlit application test
+
+The application was run through Streamlit's application-testing framework.
+
+- Exceptions: **0**
+- Tabs detected: **6**
+- Metrics detected: **9** across the app
+- Plotly charts detected: **6**
+- Data tables detected: **3**
+
+Observed clean-baseline metrics:
+
+- Total cases: 400
+- Open / in progress: 89
+- Resolution rate: 77.8%
+- High experience risk: 7
+- Poor despite resolved: 12
+
+## Case-submission flow test
+
+The form was filled with a non-identifying Library case and submitted through the Streamlit test interface.
+
+- Before submission: 400 rows
+- After submission: 401 rows
+- Generated ID: SCS-0401
+- Stored status: Open
+- Stored source: User submitted in app
+- Visible confirmation: `Case SCS-0401 was saved. KPIs and charts now include it.`
+- Streamlit exceptions: 0
+
+After verification, the temporary test insertion was removed by restoring the clean baseline database. The delivered database contains 400 cases.
+
+## Visual check
+
+The running application was opened in Chromium at 1050 x 1004 and visually checked on:
+
+- Overview
+- Experience Analytics
+- Raise New Case
+
+The hero, KPI cards, tabs, charts and form were readable without overlap or clipping in the checked viewport. The live local test URL is not a public deployment URL and is therefore not included as a submission link.
