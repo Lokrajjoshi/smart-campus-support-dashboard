@@ -25,28 +25,47 @@ st.markdown("""
   [data-testid="stSidebar"] button {border-color:rgba(255,255,255,.30) !important;}
   .block-container {padding-top:1.45rem;padding-bottom:3rem;max-width:1500px;}
   h1,h2,h3 {letter-spacing:-.025em;color:#172033;} p,label,.stCaption {color:#475569;}
-  .hero {position:relative;overflow:hidden;padding:2rem 2.1rem;border-radius:26px;color:white;background:linear-gradient(120deg,#112451 0%,#2456d8 58%,#0891b2 100%);box-shadow:0 18px 48px rgba(22,57,133,.24);margin-bottom:1.05rem;}
+  .hero {position:relative;overflow:hidden;padding:2rem 2.1rem;border-radius:26px;color:white;background:linear-gradient(120deg,#112451 0%,#2456d8 45%,#0891b2 100%);background-size:180% 180%;box-shadow:0 18px 48px rgba(22,57,133,.24);margin-bottom:1.05rem;animation:gradientMove 10s ease infinite;}
   .hero:after {content:"";position:absolute;width:320px;height:320px;border-radius:50%;right:-95px;top:-165px;background:rgba(255,255,255,.12);}
   .hero h1 {color:white;margin:0;font-size:clamp(1.8rem,3vw,2.75rem);line-height:1.08;}.hero p {color:#eaf2ff;margin:.7rem 0 1.05rem;font-size:1rem;}
   .hero-badge {display:inline-block;margin:0 .45rem .25rem 0;padding:.32rem .72rem;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.13);color:white;font-size:.78rem;font-weight:700;}
+  .hero-grid {display:grid;grid-template-columns:minmax(0,1.5fr) minmax(230px,.55fr);align-items:center;gap:1.4rem;position:relative;z-index:2;}
+  .pulse-scene {height:220px;position:relative;display:flex;align-items:center;justify-content:center;perspective:700px;}
+  .pulse-core {position:absolute;width:74px;height:74px;border-radius:24px;background:linear-gradient(145deg,#fff,#7dd3fc);box-shadow:0 0 35px rgba(125,211,252,.75),inset 0 0 15px rgba(37,99,235,.28);transform:rotate(45deg);animation:coreFloat 3.4s ease-in-out infinite;}
+  .pulse-core:after {content:"CX";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#173b7a;font-size:1.05rem;font-weight:900;transform:rotate(-45deg);}
+  .orbit {position:absolute;border:1.5px solid rgba(255,255,255,.48);border-radius:50%;transform-style:preserve-3d;}
+  .orbit.one {width:140px;height:140px;transform:rotateX(67deg) rotateZ(12deg);animation:orbitOne 9s linear infinite;}
+  .orbit.two {width:190px;height:190px;transform:rotateX(68deg) rotateZ(72deg);animation:orbitTwo 12s linear infinite reverse;}
+  .orbit-dot {position:absolute;width:13px;height:13px;border-radius:50%;background:#fbbf24;box-shadow:0 0 18px #fbbf24;top:19px;left:45px;animation:dotPulse 1.8s ease-in-out infinite;}
+  .pulse-label {position:absolute;bottom:3px;color:#e0f2fe;font-size:.73rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;}
+  @keyframes gradientMove {0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  @keyframes coreFloat {0%,100%{transform:rotate(45deg) translateY(0)}50%{transform:rotate(45deg) translate(-7px,7px)}}
+  @keyframes orbitOne {to{transform:rotateX(67deg) rotateZ(372deg)}}
+  @keyframes orbitTwo {to{transform:rotateX(68deg) rotateZ(432deg)}}
+  @keyframes dotPulse {0%,100%{transform:scale(.8);opacity:.65}50%{transform:scale(1.25);opacity:1}}
   .question-grid {display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:.4rem 0 1rem;}
   .question-card {background:white;border:1px solid #dce7f5;padding:1rem 1.15rem;border-radius:16px;box-shadow:0 6px 22px rgba(30,64,175,.07);color:#334155;}
   .question-card strong {display:block;color:#173b7a;margin-bottom:.25rem;}.question-card.answer {border-left:5px solid #0ea5a8;}
   .section-heading {margin:1.25rem 0 .7rem;}.section-heading h2 {font-size:1.32rem;margin:0;color:#172033;}.section-heading p {margin:.18rem 0 0;font-size:.9rem;color:#64748b;}
-  div[data-testid="stMetric"] {background:white;padding:1rem 1.05rem;border-radius:17px;box-shadow:0 7px 24px rgba(22,54,112,.08);border:1px solid #e0e9f5;min-height:118px;transition:.2s;}
-  div[data-testid="stMetric"]:hover {transform:translateY(-2px);box-shadow:0 11px 28px rgba(22,54,112,.12);}
+  div[data-testid="stMetric"] {background:white;padding:1rem 1.05rem;border-radius:17px;box-shadow:0 7px 24px rgba(22,54,112,.08);border:1px solid #e0e9f5;min-height:118px;transition:transform .25s ease,box-shadow .25s ease;transform-style:preserve-3d;}
+  div[data-testid="stMetric"]:hover {transform:perspective(700px) translateY(-5px) rotateX(2deg) rotateY(-2deg);box-shadow:0 16px 34px rgba(22,54,112,.15);}
   div[data-testid="stMetric"] label,div[data-testid="stMetric"] [data-testid="stMetricLabel"] * {color:#64748b !important;font-weight:700 !important;}
   div[data-testid="stMetric"] [data-testid="stMetricValue"] * {color:#172033 !important;} div[data-testid="stMetricDelta"] * {color:#0f766e !important;}
   .mini-card {height:100%;background:white;border:1px solid #e0e9f5;border-radius:17px;padding:1rem 1.05rem;box-shadow:0 7px 24px rgba(22,54,112,.07);}
   .mini-card .icon {font-size:1.35rem}.mini-card .label {font-size:.78rem;color:#64748b;font-weight:700;text-transform:uppercase;letter-spacing:.04em}.mini-card .value {font-size:1.08rem;color:#172033;font-weight:800;margin-top:.25rem}.mini-card .note {font-size:.78rem;color:#64748b;margin-top:.18rem}
   .risk-card {background:white;border:1px solid #e0e9f5;border-radius:18px;padding:1.1rem 1.2rem;box-shadow:0 7px 24px rgba(22,54,112,.07)}.risk-low {border-left:6px solid #22c55e}.risk-medium {border-left:6px solid #f59e0b}.risk-high {border-left:6px solid #ef4444}
   .step-card {background:#eff6ff;border:1px solid #bfdbfe;border-radius:16px;padding:1rem 1.1rem;color:#1e3a5f;margin-bottom:.6rem}.step-number {display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:50%;background:#2563eb;color:white;font-weight:800;margin-right:.45rem}
-  [data-testid="stTabs"] button {color:#475569 !important;font-weight:700}[data-testid="stTabs"] button[aria-selected="true"] {color:#1d4ed8 !important}[data-testid="stTabs"] [data-baseweb="tab-highlight"] {background:#2563eb}
+  [data-testid="stSidebar"] [role="radiogroup"] {gap:.38rem;}
+  [data-testid="stSidebar"] [role="radiogroup"] label {background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:.58rem .65rem;transition:.2s;}
+  [data-testid="stSidebar"] [role="radiogroup"] label:hover {background:rgba(255,255,255,.16);transform:translateX(4px);}
+  [data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) {background:linear-gradient(90deg,rgba(59,130,246,.55),rgba(14,165,233,.28));border-color:rgba(255,255,255,.36);box-shadow:0 7px 20px rgba(0,0,0,.14);}
+  [data-testid="stSidebar"] .stButton button {background:rgba(255,255,255,.13) !important;color:white !important;border:1px solid rgba(255,255,255,.28) !important;}
+  [data-testid="stSidebar"] .stButton button:hover {background:rgba(255,255,255,.23) !important;transform:translateY(-1px);}
   [data-testid="stDataFrame"],[data-testid="stPlotlyChart"] {background:white;border-radius:18px;border:1px solid #e0e9f5;box-shadow:0 7px 24px rgba(22,54,112,.07);overflow:hidden}
   [data-testid="stForm"] {background:white;border:1px solid #dce7f5;border-radius:20px;padding:1.25rem;box-shadow:0 8px 28px rgba(22,54,112,.08)}
   [data-baseweb="input"]>div,[data-baseweb="select"]>div,textarea {background:white !important;color:#172033 !important} input,textarea {color:#172033 !important;-webkit-text-fill-color:#172033 !important}
   [data-testid="stExpander"] {background:white;border-radius:15px;border:1px solid #e0e9f5}.stAlert {border-radius:15px} footer {visibility:hidden}
-  @media(max-width:800px){.question-grid{grid-template-columns:1fr}.hero{padding:1.4rem}.block-container{padding-left:1rem;padding-right:1rem}}
+  @media(max-width:900px){.question-grid,.hero-grid{grid-template-columns:1fr}.pulse-scene{height:150px}.hero{padding:1.4rem}.block-container{padding-left:1rem;padding-right:1rem}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -93,6 +112,13 @@ with st.sidebar:
     st.markdown("## 🎓 Campus Support")
     st.caption("Student Experience Intelligence")
     st.markdown("---")
+    st.markdown("### Navigate")
+    page = st.radio(
+        "Dashboard navigation",
+        ["🏠 Overview","🔎 Ticket Explorer","🏢 Service Analytics","💙 Experience Analytics","➕ Raise New Case","ℹ️ About & Method"],
+        label_visibility="collapsed",
+    )
+    st.markdown("---")
     st.markdown("### System status")
     st.success("● Dashboard online")
     st.write(f"**{len(df):,}** cases loaded")
@@ -109,11 +135,17 @@ with st.sidebar:
     st.caption("Synthetic demonstration data — not CHRIST University operational data.")
 
 st.markdown("""
-<div class="hero">
-  <span class="hero-badge">LIVE USER-ACTION UPDATES</span><span class="hero-badge">PRIVACY-AWARE</span><span class="hero-badge">EXPLAINABLE RISK</span>
-  <h1>Smart Campus Support &<br>Student Experience Dashboard</h1>
-  <p>See beyond ticket closure and understand how students actually experienced campus support.</p>
-  <span class="hero-badge">2647136</span><span class="hero-badge">MCA Python Programming CIA 3</span>
+<div class="hero"><div class="hero-grid">
+  <div>
+    <span class="hero-badge">LIVE USER-ACTION UPDATES</span><span class="hero-badge">PRIVACY-AWARE</span><span class="hero-badge">EXPLAINABLE RISK</span>
+    <h1>Smart Campus Support &<br>Student Experience Dashboard</h1>
+    <p>See beyond ticket closure and understand how students actually experienced campus support.</p>
+    <span class="hero-badge">2647136</span><span class="hero-badge">MCA Python Programming CIA 3</span>
+  </div>
+  <div class="pulse-scene" aria-label="Animated student experience pulse">
+    <div class="orbit one"><span class="orbit-dot"></span></div><div class="orbit two"></div><div class="pulse-core"></div><div class="pulse-label">Experience Pulse</div>
+  </div>
+</div>
 </div>
 <div class="question-grid">
   <div class="question-card"><strong>❓ Core question</strong>Why can students have a poor support experience even when their ticket is marked resolved?</div>
@@ -124,9 +156,7 @@ st.markdown("""
 if "created_case" in st.session_state:
     st.success(f"✅ Case {st.session_state.pop('created_case')} was saved. All KPIs and charts now include it.")
 
-overview,explorer,service_tab,experience,raise_case,about = st.tabs(["🏠 Overview","🔎 Ticket Explorer","🏢 Service Analytics","💙 Experience Analytics","➕ Raise New Case","ℹ️ About & Method"])
-
-with overview:
+if page == "🏠 Overview":
     section_heading("📊","Campus support at a glance","Live summary of the current case dataset")
     k1,k2,k3,k4,k5 = st.columns(5)
     k1.metric("Total cases",f"{len(df):,}","Live dataset")
@@ -166,7 +196,7 @@ with overview:
     section_heading("🚩","Resolved, but still a poor experience","Cases where operational closure hides student frustration")
     st.dataframe(poor_resolved[["case_id","service","status","waiting_hours","handoffs","follow_ups","reopened","satisfaction","risk_level","risk_reasons"]].head(12),width="stretch",hide_index=True,column_config={"case_id":"Case ID","waiting_hours":st.column_config.NumberColumn("Wait (h)",format="%.1f"),"satisfaction":st.column_config.NumberColumn("Rating",format="%d ⭐"),"risk_level":"Risk"})
 
-with explorer:
+elif page == "🔎 Ticket Explorer":
     section_heading("🔎","Ticket Explorer","Search, filter and understand individual campus support cases")
     shown=filter_cases(df,"explorer")
     m1,m2,m3,m4=st.columns(4)
@@ -182,7 +212,7 @@ with explorer:
         st.markdown(f"<div class='risk-card risk-{level.lower()}'><b>{selected} · {row.title}</b><br><span style='font-size:1.35rem;font-weight:800;color:#172033'>{level} risk — {score}/100</span><br><span style='color:#64748b'>{' • '.join(reasons)}</span></div>",unsafe_allow_html=True)
     else: st.warning("No cases match those filters. Remove one or more filters to continue.")
 
-with service_tab:
+elif page == "🏢 Service Analytics":
     section_heading("🏢","Service performance","Compare demand, speed, satisfaction and experience risk across campus services")
     by_service=df.groupby("service").agg(cases=("case_id","count"),resolution_rate=("status",lambda s:s.isin(["Resolved","Closed"]).mean()),median_resolution_hours=("resolution_hours","median"),average_satisfaction=("satisfaction","mean"),average_risk=("risk_score","mean"),high_risk_cases=("risk_level",lambda s:(s=="High").sum())).reset_index()
     top=by_service.sort_values("cases",ascending=False).iloc[0];best=by_service.sort_values("average_satisfaction",ascending=False).iloc[0];fastest=by_service.sort_values("median_resolution_hours").iloc[0]
@@ -195,7 +225,7 @@ with service_tab:
     c2.plotly_chart(polish_chart(comparison),width="stretch")
     st.dataframe(by_service.style.format({"resolution_rate":"{:.1%}","median_resolution_hours":"{:.1f}","average_satisfaction":"{:.2f}","average_risk":"{:.1f}"}),width="stretch",hide_index=True)
 
-with experience:
+elif page == "💙 Experience Analytics":
     section_heading("💙","Student experience signals","Measure the effort and friction hidden behind ticket status")
     resolved=df[resolved_mask].copy()
     e1,e2,e3,e4=st.columns(4)
@@ -215,7 +245,7 @@ with experience:
     c4.plotly_chart(polish_chart(friction_chart,360),width="stretch")
     st.info("💡 Missing satisfaction adds no negative points. An unresolved case independently receives +25 because its outcome is still uncertain.")
 
-with raise_case:
+elif page == "➕ Raise New Case":
     section_heading("➕","Raise a new campus support case","Submit a demonstration case and watch the dashboard update immediately")
     form_col,guide_col=st.columns([1.45,.75])
     with guide_col:
@@ -239,7 +269,7 @@ with raise_case:
                     new_id=add_case({"service":service,"category":category,"priority":priority,"title":title,"description":description});get_data.clear();st.session_state["created_case"]=new_id;st.rerun()
                 except ValueError as error: st.error(str(error))
 
-with about:
+elif page == "ℹ️ About & Method":
     section_heading("ℹ️","About the project","Method, data ethics and explainable decision logic")
     a1,a2,a3=st.columns(3)
     a1.markdown("<div class='mini-card'><div class='icon'>🎯</div><div class='label'>Purpose</div><div class='value'>Look beyond closure</div><div class='note'>Measure how well support was experienced, not only whether it ended.</div></div>",unsafe_allow_html=True)
