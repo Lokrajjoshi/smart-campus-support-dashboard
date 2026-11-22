@@ -1,7 +1,5 @@
 """Smart Campus Support & Student Experience Dashboard."""
 
-from __future__ import annotations
-
 from datetime import datetime
 
 import pandas as pd
@@ -123,16 +121,24 @@ with st.sidebar:
     st.markdown("### Navigate")
     page = st.radio(
         "Dashboard navigation",
-        ["🏠 Overview","🔎 Ticket Explorer","🏢 Service Analytics","💙 Experience Analytics","➕ Raise New Case","ℹ️ About & Method"],
+        [
+            "🏠 Overview",
+            "🔎 Ticket Explorer",
+            "🏢 Service Analytics",
+            "💙 Experience Analytics",
+            "➕ Raise New Case",
+            "ℹ️ About & Method",
+        ],
         label_visibility="collapsed",
     )
     st.markdown("---")
     st.markdown("### Dataset status")
     st.write(f"**{len(df):,}** cases loaded")
     st.write(f"**{df.service.nunique()}** campus services")
-    st.write(f"Updated **{datetime.now().strftime('%d %b %Y, %I:%M %p')}**")
+    st.write(f"Last refreshed **{datetime.now().strftime('%d %b %Y, %I:%M %p')}**")
     if st.button("↻ Refresh dashboard", width="stretch"):
-        get_data.clear(); st.rerun()
+        get_data.clear()
+        st.rerun()
     st.markdown("---")
     st.markdown("### Risk legend")
     st.markdown("🟢 **Low:** 0–24 points")
@@ -164,98 +170,371 @@ if "created_case" in st.session_state:
     st.success(f"✅ Case {st.session_state.pop('created_case')} was saved. All KPIs and charts now include it.")
 
 if page == "🏠 Overview":
-    section_heading("📊","Campus support at a glance","Live summary of the current case dataset")
-    k1,k2,k3,k4,k5 = st.columns(5)
-    k1.metric("Total cases",f"{len(df):,}","Live dataset")
-    k2.metric("Open / in progress",int((~resolved_mask).sum()),"Needs attention")
-    k3.metric("Resolution rate",f"{resolved_mask.mean():.1%}","Resolved + closed")
-    k4.metric("High experience risk",int((df.risk_level=="High").sum()),"Priority review")
-    k5.metric("Poor despite resolved",len(poor_resolved),"Hidden experience gap")
+    section_heading(
+        "📊",
+        "Campus support at a glance",
+        "Live summary of the current case dataset",
+    )
+    k1, k2, k3, k4, k5 = st.columns(5)
+    k1.metric("Total cases", f"{len(df):,}", "Live dataset")
+    k2.metric("Open / in progress", int((~resolved_mask).sum()), "Needs attention")
+    k3.metric("Resolution rate", f"{resolved_mask.mean():.1%}", "Resolved + closed")
+    k4.metric(
+        "High experience risk",
+        int((df.risk_level == "High").sum()),
+        "Priority review",
+    )
+    k5.metric("Poor despite resolved", len(poor_resolved), "Hidden experience gap")
 
     busiest = df.service.value_counts().idxmax()
     slowest = df.groupby("service").resolution_hours.median().idxmax()
     highest_risk_service = df.groupby("service").risk_score.mean().idxmax()
-    c1,c2,c3,c4 = st.columns(4)
-    cards=[(c1,"🔥","Busiest service",busiest,f"{int((df.service==busiest).sum())} cases"),(c2,"⏱️","Slowest median resolution",slowest,f"{df[df.service==slowest].resolution_hours.median():.1f} hours"),(c3,"⚠️","Highest average risk",highest_risk_service,f"{df[df.service==highest_risk_service].risk_score.mean():.1f} points"),(c4,"⭐","Average satisfaction",f"{df.satisfaction.mean():.2f} / 5","Rated resolved cases")]
-    for col,icon,label,value,note in cards:
-        col.markdown(f"<div class='mini-card'><div class='icon'>{icon}</div><div class='label'>{label}</div><div class='value'>{value}</div><div class='note'>{note}</div></div>",unsafe_allow_html=True)
+    c1, c2, c3, c4 = st.columns(4)
+    cards = [
+        (c1, "🔥", "Busiest service", busiest, f"{int((df.service == busiest).sum())} cases"),
+        (c2, "⏱️", "Slowest median resolution", slowest, f"{df[df.service == slowest].resolution_hours.median():.1f} hours"),
+        (c3, "⚠️", "Highest average risk", highest_risk_service, f"{df[df.service == highest_risk_service].risk_score.mean():.1f} points"),
+        (c4, "⭐", "Average satisfaction", f"{df.satisfaction.mean():.2f} / 5", "Rated resolved cases"),
+    ]
+    for col, icon, label, value, note in cards:
+        col.markdown(
+            f"<div class='mini-card'><div class='icon'>{icon}</div>"
+            f"<div class='label'>{label}</div><div class='value'>{value}</div>"
+            f"<div class='note'>{note}</div></div>",
+            unsafe_allow_html=True,
+        )
 
-    section_heading("📈","Trends and risk mix","Hover over charts to inspect exact values")
-    left,right = st.columns([1.35,1])
-    monthly=df.assign(month=pd.to_datetime(df.created_at).dt.to_period("M").astype(str)).groupby(["month","status"]).size().reset_index(name="cases")
-    trend=px.area(monthly,x="month",y="cases",color="status",markers=True,title="Cases over time by current status",color_discrete_map={"Closed":"#0f766e","Resolved":"#2563eb","In Progress":"#f59e0b","Open":"#ef4444"})
-    left.plotly_chart(polish_chart(trend),width="stretch")
-    risk_counts=df.risk_level.value_counts().reindex(["Low","Medium","High"],fill_value=0).reset_index()
-    donut=px.pie(risk_counts,names="risk_level",values="count",hole=.63,title="Student experience risk distribution",color="risk_level",color_discrete_map={"Low":"#22c55e","Medium":"#f59e0b","High":"#ef4444"})
-    donut.update_traces(textposition="inside",textinfo="percent+label")
-    right.plotly_chart(polish_chart(donut),width="stretch")
+    section_heading("📈", "Trends and risk mix", "Hover over charts to inspect exact values")
+    left, right = st.columns([1.35, 1])
+    monthly = (
+        df.assign(month=pd.to_datetime(df.created_at).dt.to_period("M").astype(str))
+        .groupby(["month", "status"])
+        .size()
+        .reset_index(name="cases")
+    )
+    trend = px.area(
+        monthly,
+        x="month",
+        y="cases",
+        color="status",
+        markers=True,
+        title="Cases over time by current status",
+        color_discrete_map={
+            "Closed": "#0f766e",
+            "Resolved": "#2563eb",
+            "In Progress": "#f59e0b",
+            "Open": "#ef4444",
+        },
+    )
+    left.plotly_chart(polish_chart(trend), width="stretch")
+    risk_counts = (
+        df.risk_level.value_counts()
+        .reindex(["Low", "Medium", "High"], fill_value=0)
+        .reset_index()
+    )
+    donut = px.pie(
+        risk_counts,
+        names="risk_level",
+        values="count",
+        hole=0.63,
+        title="Student experience risk distribution",
+        color="risk_level",
+        color_discrete_map={"Low": "#22c55e", "Medium": "#f59e0b", "High": "#ef4444"},
+    )
+    donut.update_traces(textposition="inside", textinfo="percent+label")
+    right.plotly_chart(polish_chart(donut), width="stretch")
 
-    p1,p2=st.columns(2)
-    priority_counts=df.priority.value_counts().reindex(["Low","Medium","High","Critical"],fill_value=0).reset_index()
-    priority_chart=px.bar(priority_counts,x="priority",y="count",color="priority",title="Case load by priority",color_discrete_map={"Low":"#60a5fa","Medium":"#fbbf24","High":"#fb7185","Critical":"#b91c1c"})
+    p1, p2 = st.columns(2)
+    priority_counts = (
+        df.priority.value_counts()
+        .reindex(["Low", "Medium", "High", "Critical"], fill_value=0)
+        .reset_index()
+    )
+    priority_chart = px.bar(
+        priority_counts,
+        x="priority",
+        y="count",
+        color="priority",
+        title="Case load by priority",
+        color_discrete_map={
+            "Low": "#60a5fa",
+            "Medium": "#fbbf24",
+            "High": "#fb7185",
+            "Critical": "#b91c1c",
+        },
+    )
     priority_chart.update_layout(showlegend=False)
-    p1.plotly_chart(polish_chart(priority_chart,330),width="stretch")
-    service_risk=df.groupby("service").risk_score.mean().sort_values().reset_index()
-    risk_bar=px.bar(service_risk,x="risk_score",y="service",orientation="h",title="Average experience risk by service",color="risk_score",color_continuous_scale=["#bfdbfe","#f59e0b","#ef4444"])
+    p1.plotly_chart(polish_chart(priority_chart, 330), width="stretch")
+    service_risk = df.groupby("service").risk_score.mean().sort_values().reset_index()
+    risk_bar = px.bar(
+        service_risk,
+        x="risk_score",
+        y="service",
+        orientation="h",
+        title="Average experience risk by service",
+        color="risk_score",
+        color_continuous_scale=["#bfdbfe", "#f59e0b", "#ef4444"],
+    )
     risk_bar.update_coloraxes(showscale=False)
-    p2.plotly_chart(polish_chart(risk_bar,330),width="stretch")
+    p2.plotly_chart(polish_chart(risk_bar, 330), width="stretch")
 
-    section_heading("🚩","Resolved, but still a poor experience","Cases where operational closure hides student frustration")
-    poor_display = table_for_display(poor_resolved[["case_id","service","status","waiting_hours","handoffs","follow_ups","reopened","satisfaction","risk_level","risk_reasons"]].head(12))
-    st.dataframe(poor_display,width="stretch",hide_index=True,column_config={"case_id":"Case ID","waiting_hours":st.column_config.NumberColumn("Wait (h)",format="%.1f"),"reopened":"Reopened?","satisfaction":st.column_config.NumberColumn("Rating",format="%d ⭐"),"risk_level":"Risk"})
+    section_heading(
+        "🚩",
+        "Resolved, but still a poor experience",
+        "Cases where operational closure hides student frustration",
+    )
+    poor_columns = [
+        "case_id",
+        "service",
+        "status",
+        "waiting_hours",
+        "handoffs",
+        "follow_ups",
+        "reopened",
+        "satisfaction",
+        "risk_level",
+        "risk_reasons",
+    ]
+    poor_display = table_for_display(poor_resolved[poor_columns].head(12))
+    st.dataframe(
+        poor_display,
+        width="stretch",
+        hide_index=True,
+        column_config={
+            "case_id": "Case ID",
+            "waiting_hours": st.column_config.NumberColumn("Wait (h)", format="%.1f"),
+            "reopened": "Reopened?",
+            "satisfaction": st.column_config.NumberColumn("Rating", format="%d ⭐"),
+            "risk_level": "Risk",
+        },
+    )
 
 elif page == "🔎 Ticket Explorer":
-    section_heading("🔎","Ticket Explorer","Search, filter and understand individual campus support cases")
-    shown=filter_cases(df,"explorer")
-    m1,m2,m3,m4=st.columns(4)
-    m1.metric("Matching cases",len(shown));m2.metric("Unresolved",int((~shown.status.isin(["Resolved","Closed"])).sum()));m3.metric("High risk",int((shown.risk_level=="High").sum()));m4.metric("Reopened",int(shown.reopened.sum()))
-    columns=["case_id","created_at","service","category","priority","status","waiting_hours","resolution_hours","follow_ups","handoffs","reopened","satisfaction","risk_score","risk_level"]
-    st.dataframe(table_for_display(shown[columns]),width="stretch",hide_index=True,column_config={"case_id":"Case ID","created_at":"Created","waiting_hours":st.column_config.NumberColumn("Wait (h)",format="%.1f"),"resolution_hours":st.column_config.NumberColumn("Resolution (h)",format="%.1f"),"reopened":"Reopened?","risk_score":st.column_config.ProgressColumn("Risk score",min_value=0,max_value=100,format="%d")})
-    options=shown.case_id.tolist()
+    section_heading(
+        "🔎",
+        "Ticket Explorer",
+        "Search, filter and understand individual campus support cases",
+    )
+    shown = filter_cases(df, "explorer")
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("Matching cases", len(shown))
+    m2.metric(
+        "Unresolved",
+        int((~shown.status.isin(["Resolved", "Closed"])).sum()),
+    )
+    m3.metric("High risk", int((shown.risk_level == "High").sum()))
+    m4.metric("Reopened", int(shown.reopened.sum()))
+    columns = [
+        "case_id",
+        "created_at",
+        "service",
+        "category",
+        "priority",
+        "status",
+        "waiting_hours",
+        "resolution_hours",
+        "follow_ups",
+        "handoffs",
+        "reopened",
+        "satisfaction",
+        "risk_score",
+        "risk_level",
+    ]
+    st.dataframe(
+        table_for_display(shown[columns]),
+        width="stretch",
+        hide_index=True,
+        column_config={
+            "case_id": "Case ID",
+            "created_at": "Created",
+            "waiting_hours": st.column_config.NumberColumn("Wait (h)", format="%.1f"),
+            "resolution_hours": st.column_config.NumberColumn("Resolution (h)", format="%.1f"),
+            "reopened": "Reopened?",
+            "risk_score": st.column_config.ProgressColumn(
+                "Risk score", min_value=0, max_value=100, format="%d"
+            ),
+        },
+    )
+    options = shown.case_id.tolist()
     if options:
-        section_heading("🧭","Explain one case","Every risk level is supported by visible reasons")
-        selected=st.selectbox("Select a case ID",options)
-        row=shown[shown.case_id==selected].iloc[0]
-        score,level,reasons=score_experience_risk(row)
-        st.markdown(f"<div class='risk-card risk-{level.lower()}'><b>{selected} · {row.title}</b><br><span style='font-size:1.35rem;font-weight:800;color:#172033'>{level} risk — {score}/100</span><br><span style='color:#64748b'>{' • '.join(reasons)}</span></div>",unsafe_allow_html=True)
-    else: st.warning("No cases match those filters. Remove one or more filters to continue.")
+        section_heading(
+            "🧭", "Explain one case", "Every risk level is supported by visible reasons"
+        )
+        selected = st.selectbox("Select a case ID", options)
+        row = shown[shown.case_id == selected].iloc[0]
+        score, level, reasons = score_experience_risk(row)
+        st.markdown(
+            f"<div class='risk-card risk-{level.lower()}'>"
+            f"<b>{selected} · {row.title}</b><br>"
+            f"<span style='font-size:1.35rem;font-weight:800;color:#172033'>"
+            f"{level} risk — {score}/100</span><br>"
+            f"<span style='color:#64748b'>{' • '.join(reasons)}</span></div>",
+            unsafe_allow_html=True,
+        )
+    else:
+        st.warning("No cases match those filters. Remove one or more filters to continue.")
 
 elif page == "🏢 Service Analytics":
-    section_heading("🏢","Service performance","Compare demand, speed, satisfaction and experience risk across campus services")
-    by_service=df.groupby("service").agg(cases=("case_id","count"),resolution_rate=("status",lambda s:s.isin(["Resolved","Closed"]).mean()),median_resolution_hours=("resolution_hours","median"),average_satisfaction=("satisfaction","mean"),average_risk=("risk_score","mean"),high_risk_cases=("risk_level",lambda s:(s=="High").sum())).reset_index()
-    top=by_service.sort_values("cases",ascending=False).iloc[0];best=by_service.sort_values("average_satisfaction",ascending=False).iloc[0];fastest=by_service.sort_values("median_resolution_hours").iloc[0]
-    s1,s2,s3=st.columns(3)
-    s1.metric("Highest demand",top.service,f"{int(top.cases)} cases");s2.metric("Highest satisfaction",best.service,f"{best.average_satisfaction:.2f} / 5");s3.metric("Fastest median resolution",fastest.service,f"{fastest.median_resolution_hours:.1f} hours")
-    c1,c2=st.columns(2)
-    demand=px.bar(by_service.sort_values("cases"),x="cases",y="service",orientation="h",title="Demand by campus service",color="cases",color_continuous_scale=["#bfdbfe","#2563eb"]);demand.update_coloraxes(showscale=False)
-    c1.plotly_chart(polish_chart(demand),width="stretch")
-    comparison=px.scatter(by_service,x="median_resolution_hours",y="average_satisfaction",size="cases",color="average_risk",hover_name="service",title="Speed, satisfaction and risk",color_continuous_scale=["#22c55e","#f59e0b","#ef4444"],labels={"median_resolution_hours":"Median resolution hours","average_satisfaction":"Average satisfaction"})
-    c2.plotly_chart(polish_chart(comparison),width="stretch")
-    st.dataframe(by_service.style.format({"resolution_rate":"{:.1%}","median_resolution_hours":"{:.1f}","average_satisfaction":"{:.2f}","average_risk":"{:.1f}"}),width="stretch",hide_index=True)
+    section_heading(
+        "🏢",
+        "Service performance",
+        "Compare demand, speed, satisfaction and experience risk across campus services",
+    )
+    by_service = (
+        df.groupby("service")
+        .agg(
+            cases=("case_id", "count"),
+            resolution_rate=(
+                "status",
+                lambda status: status.isin(["Resolved", "Closed"]).mean(),
+            ),
+            median_resolution_hours=("resolution_hours", "median"),
+            average_satisfaction=("satisfaction", "mean"),
+            average_risk=("risk_score", "mean"),
+            high_risk_cases=("risk_level", lambda risk: (risk == "High").sum()),
+        )
+        .reset_index()
+    )
+    top = by_service.sort_values("cases", ascending=False).iloc[0]
+    best = by_service.sort_values("average_satisfaction", ascending=False).iloc[0]
+    fastest = by_service.sort_values("median_resolution_hours").iloc[0]
+
+    s1, s2, s3 = st.columns(3)
+    s1.metric("Highest demand", top.service, f"{int(top.cases)} cases")
+    s2.metric("Highest satisfaction", best.service, f"{best.average_satisfaction:.2f} / 5")
+    s3.metric(
+        "Fastest median resolution",
+        fastest.service,
+        f"{fastest.median_resolution_hours:.1f} hours",
+    )
+
+    c1, c2 = st.columns(2)
+    demand = px.bar(
+        by_service.sort_values("cases"),
+        x="cases",
+        y="service",
+        orientation="h",
+        title="Demand by campus service",
+        color="cases",
+        color_continuous_scale=["#bfdbfe", "#2563eb"],
+    )
+    demand.update_coloraxes(showscale=False)
+    c1.plotly_chart(polish_chart(demand), width="stretch")
+    comparison = px.scatter(
+        by_service,
+        x="median_resolution_hours",
+        y="average_satisfaction",
+        size="cases",
+        color="average_risk",
+        hover_name="service",
+        title="Speed, satisfaction and risk",
+        color_continuous_scale=["#22c55e", "#f59e0b", "#ef4444"],
+        labels={
+            "median_resolution_hours": "Median resolution hours",
+            "average_satisfaction": "Average satisfaction",
+        },
+    )
+    c2.plotly_chart(polish_chart(comparison), width="stretch")
+    st.dataframe(
+        by_service.style.format(
+            {
+                "resolution_rate": "{:.1%}",
+                "median_resolution_hours": "{:.1f}",
+                "average_satisfaction": "{:.2f}",
+                "average_risk": "{:.1f}",
+            }
+        ),
+        width="stretch",
+        hide_index=True,
+    )
 
 elif page == "💙 Experience Analytics":
-    section_heading("💙","Student experience signals","Measure the effort and friction hidden behind ticket status")
-    resolved=df[resolved_mask].copy()
-    e1,e2,e3,e4=st.columns(4)
-    e1.metric("Median waiting",f"{df.waiting_hours.median():.1f} h","Before support starts");e2.metric("Cases with handoffs",f"{(df.handoffs>0).mean():.1%}","Moved between teams");e3.metric("Cases with follow-ups",f"{(df.follow_ups>0).mean():.1%}","Student chased progress");e4.metric("Reopened resolved cases",f"{resolved.reopened.mean():.1%}","Issue returned")
-    c1,c2=st.columns(2)
-    wait_risk=px.box(df,x="risk_level",y="waiting_hours",color="risk_level",category_orders={"risk_level":["Low","Medium","High"]},log_y=True,title="Waiting time grows with experience risk",color_discrete_map={"Low":"#22c55e","Medium":"#f59e0b","High":"#ef4444"},labels={"risk_level":"Experience risk","waiting_hours":"Waiting hours (log scale)"})
-    c1.plotly_chart(polish_chart(wait_risk),width="stretch")
-    sat=resolved.dropna(subset=["satisfaction"])
-    satisfaction=px.histogram(sat,x="satisfaction",color="reopened",barmode="group",nbins=5,title="Satisfaction: reopened vs not reopened",color_discrete_map={False:"#2563eb",True:"#ef4444"},labels={"satisfaction":"Satisfaction (1–5)","count":"Cases"})
-    c2.plotly_chart(polish_chart(satisfaction),width="stretch")
-    c3,c4=st.columns(2)
-    effort=df.assign(student_effort=df.follow_ups+df.handoffs)
-    effort_chart=px.scatter(effort,x="student_effort",y="risk_score",color="risk_level",size="waiting_hours",hover_data=["case_id","service","status"],title="More effort usually means higher risk",color_discrete_map={"Low":"#22c55e","Medium":"#f59e0b","High":"#ef4444"},labels={"student_effort":"Handoffs + follow-ups","risk_score":"Risk score"})
-    c3.plotly_chart(polish_chart(effort_chart,360),width="stretch")
-    friction=pd.DataFrame({"Signal":["Long wait (>24h)","Any handoff","Any follow-up","Reopened"],"Cases":[(df.waiting_hours>24).sum(),(df.handoffs>0).sum(),(df.follow_ups>0).sum(),df.reopened.sum()]})
-    friction_chart=px.bar(friction,x="Cases",y="Signal",orientation="h",title="Most common experience-friction signals",color="Cases",color_continuous_scale=["#bfdbfe","#1d4ed8"]);friction_chart.update_coloraxes(showscale=False)
-    c4.plotly_chart(polish_chart(friction_chart,360),width="stretch")
+    section_heading(
+        "💙",
+        "Student experience signals",
+        "Measure the effort and friction hidden behind ticket status",
+    )
+    resolved = df[resolved_mask].copy()
+    e1, e2, e3, e4 = st.columns(4)
+    e1.metric("Median waiting", f"{df.waiting_hours.median():.1f} h", "Before support starts")
+    e2.metric("Cases with handoffs", f"{(df.handoffs > 0).mean():.1%}", "Moved between teams")
+    e3.metric("Cases with follow-ups", f"{(df.follow_ups > 0).mean():.1%}", "Student chased progress")
+    e4.metric("Reopened resolved cases", f"{resolved.reopened.mean():.1%}", "Issue returned")
+
+    c1, c2 = st.columns(2)
+    wait_risk = px.box(
+        df,
+        x="risk_level",
+        y="waiting_hours",
+        color="risk_level",
+        category_orders={"risk_level": ["Low", "Medium", "High"]},
+        log_y=True,
+        title="Waiting time grows with experience risk",
+        color_discrete_map={"Low": "#22c55e", "Medium": "#f59e0b", "High": "#ef4444"},
+        labels={
+            "risk_level": "Experience risk",
+            "waiting_hours": "Waiting hours (log scale)",
+        },
+    )
+    c1.plotly_chart(polish_chart(wait_risk), width="stretch")
+    rated_resolved = resolved.dropna(subset=["satisfaction"])
+    satisfaction = px.histogram(
+        rated_resolved,
+        x="satisfaction",
+        color="reopened",
+        barmode="group",
+        nbins=5,
+        title="Satisfaction: reopened vs not reopened",
+        color_discrete_map={False: "#2563eb", True: "#ef4444"},
+        labels={"satisfaction": "Satisfaction (1–5)", "count": "Cases"},
+    )
+    c2.plotly_chart(polish_chart(satisfaction), width="stretch")
+
+    c3, c4 = st.columns(2)
+    effort = df.assign(student_effort=df.follow_ups + df.handoffs)
+    effort_chart = px.scatter(
+        effort,
+        x="student_effort",
+        y="risk_score",
+        color="risk_level",
+        size="waiting_hours",
+        hover_data=["case_id", "service", "status"],
+        title="More effort usually means higher risk",
+        color_discrete_map={"Low": "#22c55e", "Medium": "#f59e0b", "High": "#ef4444"},
+        labels={"student_effort": "Handoffs + follow-ups", "risk_score": "Risk score"},
+    )
+    c3.plotly_chart(polish_chart(effort_chart, 360), width="stretch")
+    friction = pd.DataFrame(
+        {
+            "Signal": ["Long wait (>24h)", "Any handoff", "Any follow-up", "Reopened"],
+            "Cases": [
+                (df.waiting_hours > 24).sum(),
+                (df.handoffs > 0).sum(),
+                (df.follow_ups > 0).sum(),
+                df.reopened.sum(),
+            ],
+        }
+    )
+    friction_chart = px.bar(
+        friction,
+        x="Cases",
+        y="Signal",
+        orientation="h",
+        title="Most common experience-friction signals",
+        color="Cases",
+        color_continuous_scale=["#bfdbfe", "#1d4ed8"],
+    )
+    friction_chart.update_coloraxes(showscale=False)
+    c4.plotly_chart(polish_chart(friction_chart, 360), width="stretch")
     st.info("💡 Missing satisfaction adds no negative points. An unresolved case independently receives +25 because its outcome is still uncertain.")
 
 elif page == "➕ Raise New Case":
-    section_heading("➕","Raise a new campus support case","Submit a demonstration case and watch the dashboard update immediately")
-    form_col,guide_col=st.columns([1.45,.75])
+    section_heading(
+        "➕",
+        "Raise a new campus support case",
+        "Submit a demonstration case and watch the dashboard update immediately",
+    )
+    form_col, guide_col = st.columns([1.45, 0.75])
     with guide_col:
         st.markdown("### How it works")
         st.markdown("<div class='step-card'><span class='step-number'>1</span><b>Choose the service</b><br>Select the campus team that should handle the issue.</div>",unsafe_allow_html=True)
@@ -263,31 +542,89 @@ elif page == "➕ Raise New Case":
         st.markdown("<div class='step-card'><span class='step-number'>3</span><b>Live dashboard update</b><br>SQLite stores the case and all metrics refresh.</div>",unsafe_allow_html=True)
         st.warning("🔒 Do not enter names, student IDs, email addresses or phone numbers.")
     with form_col:
-        service=st.selectbox("Campus service *",list(SERVICES),help="Select the service responsible for the issue")
-        with st.form("new_case",clear_on_submit=True):
-            category=st.selectbox("Issue category *",SERVICES[service]);priority=st.select_slider("Priority *",options=["Low","Medium","High","Critical"],value="Medium")
-            title=st.text_input("Short title *",max_chars=100,placeholder="Example: Wi-Fi disconnecting in computer lab")
-            description=st.text_area("Describe the issue *",max_chars=600,height=150,placeholder="Explain what happened, where it happened and how it affected you...")
-            consent=st.checkbox("I confirm that I have not entered private student data")
-            submitted=st.form_submit_button("Submit support case →",type="primary",width="stretch")
+        service = st.selectbox(
+            "Campus service *",
+            list(SERVICES),
+            help="Select the service responsible for the issue",
+        )
+        with st.form("new_case", clear_on_submit=True):
+            category = st.selectbox("Issue category *", SERVICES[service])
+            priority = st.select_slider(
+                "Priority *",
+                options=["Low", "Medium", "High", "Critical"],
+                value="Medium",
+            )
+            title = st.text_input(
+                "Short title *",
+                max_chars=100,
+                placeholder="Example: Wi-Fi disconnecting in computer lab",
+            )
+            description = st.text_area(
+                "Describe the issue *",
+                max_chars=600,
+                height=150,
+                placeholder="Explain what happened, where it happened and how it affected you...",
+            )
+            consent = st.checkbox("I confirm that I have not entered private student data")
+            submitted = st.form_submit_button(
+                "Submit support case →", type="primary", width="stretch"
+            )
         if submitted:
-            if not consent: st.error("Please confirm the privacy statement before submitting.")
+            if not consent:
+                st.error("Please confirm the privacy statement before submitting.")
             else:
                 try:
-                    new_id=add_case({"service":service,"category":category,"priority":priority,"title":title,"description":description});get_data.clear();st.session_state["created_case"]=new_id;st.rerun()
-                except ValueError as error: st.error(str(error))
+                    new_id = add_case(
+                        {
+                            "service": service,
+                            "category": category,
+                            "priority": priority,
+                            "title": title,
+                            "description": description,
+                        }
+                    )
+                    get_data.clear()
+                    st.session_state["created_case"] = new_id
+                    st.rerun()
+                except ValueError as error:
+                    st.error(str(error))
 
 elif page == "ℹ️ About & Method":
-    section_heading("ℹ️","About the project","Method, data ethics and explainable decision logic")
-    a1,a2,a3=st.columns(3)
-    a1.markdown("<div class='mini-card'><div class='icon'>🎯</div><div class='label'>Purpose</div><div class='value'>Look beyond closure</div><div class='note'>Measure how well support was experienced, not only whether it ended.</div></div>",unsafe_allow_html=True)
-    a2.markdown("<div class='mini-card'><div class='icon'>⚡</div><div class='label'>Real-time meaning</div><div class='value'>Live user-action updates</div><div class='note'>Form submissions persist in SQLite and immediately refresh analysis.</div></div>",unsafe_allow_html=True)
-    a3.markdown("<div class='mini-card'><div class='icon'>🛡️</div><div class='label'>Data ethics</div><div class='value'>Synthetic and private</div><div class='note'>400 reproducible cases with no personal student information.</div></div>",unsafe_allow_html=True)
+    section_heading(
+        "ℹ️", "About the project", "Method, data ethics and explainable decision logic"
+    )
+    a1, a2, a3 = st.columns(3)
+    a1.markdown(
+        "<div class='mini-card'><div class='icon'>🎯</div>"
+        "<div class='label'>Purpose</div><div class='value'>Look beyond closure</div>"
+        "<div class='note'>Measure how well support was experienced, not only whether it ended.</div></div>",
+        unsafe_allow_html=True,
+    )
+    a2.markdown(
+        "<div class='mini-card'><div class='icon'>⚡</div>"
+        "<div class='label'>Real-time meaning</div>"
+        "<div class='value'>Live user-action updates</div>"
+        "<div class='note'>Form submissions persist in SQLite and immediately refresh analysis.</div></div>",
+        unsafe_allow_html=True,
+    )
+    a3.markdown(
+        "<div class='mini-card'><div class='icon'>🛡️</div>"
+        "<div class='label'>Data ethics</div><div class='value'>Synthetic and private</div>"
+        "<div class='note'>400 reproducible cases with no personal student information.</div></div>",
+        unsafe_allow_html=True,
+    )
     st.markdown("### Experience-risk rule")
-    r1,r2,r3=st.columns(3)
-    r1.success("🟢 **Low risk: 0–24**\n\nFew or no experience-friction signals");r2.warning("🟠 **Medium risk: 25–49**\n\nSome delay, effort or uncertainty");r3.error("🔴 **High risk: 50–100**\n\nMultiple serious experience problems")
-    with st.expander("View the complete scoring rule",expanded=True):
-        st.code("Unresolved +25 | wait >8/+5, >24/+12, >48/+20 | resolution >24/+8, >72/+15\nHandoffs 1/+3, 2/+8, 3+/+15 | follow-ups 1/+4, 2/+9, 3+/+15\nReopened +15 | satisfaction 3/+8, 1–2/+20 | Low <25, Medium 25–49, High 50+",language="text")
+    r1, r2, r3 = st.columns(3)
+    r1.success("🟢 **Low risk: 0–24**\n\nFew or no experience-friction signals")
+    r2.warning("🟠 **Medium risk: 25–49**\n\nSome delay, effort or uncertainty")
+    r3.error("🔴 **High risk: 50–100**\n\nMultiple serious experience problems")
+    with st.expander("View the complete scoring rule", expanded=True):
+        st.code(
+            "Unresolved +25 | wait >8/+5, >24/+12, >48/+20 | resolution >24/+8, >72/+15\n"
+            "Handoffs 1/+3, 2/+8, 3+/+15 | follow-ups 1/+4, 2/+9, 3+/+15\n"
+            "Reopened +15 | satisfaction 3/+8, 1–2/+20 | Low <25, Medium 25–49, High 50+",
+            language="text",
+        )
     with st.expander("Research connection"):
         st.write("This CIA application is an applied extension of the CarePulse research rationale about why technically resolved support tickets may still frustrate users. It remains a distinct MCA Python project.")
     with st.expander("Important limitation"):

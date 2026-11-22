@@ -1,6 +1,6 @@
 # Test Evidence
 
-Tested on 22 November 2026.
+Latest verification: 23 November 2026.
 
 ## Automated results
 
@@ -39,6 +39,11 @@ The enhanced interface was also checked for reliable light-mode contrast, sideba
 
 The final navigation redesign was checked page by page: Overview, Ticket Explorer, Service Analytics, Experience Analytics, Raise New Case and About & Method all rendered with zero Streamlit exceptions. The pure-CSS Experience Pulse and card-depth effects do not change the analytical logic or database behaviour.
 
+The Ticket Explorer was additionally checked with:
+
+- a Wi-Fi / IT service filter, which returned only Wi-Fi / IT cases;
+- a search string that matches no case, which displayed the expected empty-result warning.
+
 Observed clean-baseline metrics:
 
 - Total cases: 400
@@ -49,14 +54,17 @@ Observed clean-baseline metrics:
 
 ## Case-submission flow test
 
-The form was filled with a non-identifying Library case and submitted through the Streamlit test interface.
+The form was filled with a non-identifying demonstration case and submitted through the Streamlit test interface.
+
+- Submission without the privacy confirmation was blocked.
+- Submission after privacy confirmation was accepted.
 
 - Before submission: 400 rows
 - After submission: 401 rows
 - Generated ID: SCS-0401
 - Stored status: Open
 - Stored source: User submitted in app
-- Visible confirmation: `Case SCS-0401 was saved. KPIs and charts now include it.`
+- Visible confirmation: `Case SCS-0401 was saved. All KPIs and charts now include it.`
 - Streamlit exceptions: 0
 
 The redesigned form was re-tested after the interface upgrade and again persisted the case successfully.
@@ -71,4 +79,12 @@ The running application was opened in Chromium at 1050 x 1004 and visually check
 - Experience Analytics
 - Raise New Case
 
-The hero, KPI cards, tabs, charts and form were readable without overlap or clipping in the checked viewport. The live local test URL is not a public deployment URL and is therefore not included as a submission link.
+The hero, KPI cards, navigation, charts and form were readable without overlap or clipping in the checked viewport. The live local test URL is not a public deployment URL and is therefore not included as a submission link.
+
+## Repository checks
+
+- Python syntax compilation: passed
+- `git diff --check`: passed
+- Streamlit secrets file: excluded by `.gitignore`
+- Private student data in the synthetic baseline: none
+- Public deployment test: pending

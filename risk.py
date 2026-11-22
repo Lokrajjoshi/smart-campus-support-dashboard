@@ -4,8 +4,6 @@ The rule is intentionally transparent for an MCA-level project. It measures
 experience risk, not whether a support team member did a good or bad job.
 """
 
-from __future__ import annotations
-
 import pandas as pd
 
 
