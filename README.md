@@ -100,3 +100,16 @@ SQLite persists case submissions while the running app instance retains its file
 ## Research connection
 
 This dashboard is a distinct support-experience analytics project. Its rationale is an applied extension of CarePulse research into why technically resolved IT support tickets may still frustrate users.
+
+
+## Analyst validation loop
+
+The dashboard is designed to support a repeatable analyst workflow:
+
+1. **Frame the question:** compare closure with student experience.
+2. **Validate the data:** enforce lifecycle fields, service/category rules, and reproducible generation.
+3. **Inspect the signal:** segment by service, speed, satisfaction, handoffs, follow-ups, and risk.
+4. **Test the decision:** run the automated suite before changing the scoring rule or interface.
+5. **Communicate the limitation:** keep synthetic data, persistence behavior, and production boundaries explicit.
+
+This makes the project evidence-led rather than a collection of charts.
