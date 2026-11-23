@@ -1,6 +1,6 @@
 """Explainable student-experience risk scoring.
 
-The rule is intentionally transparent for an MCA-level project. It measures
+The rule is intentionally transparent and easy to audit. It measures
 experience risk, not whether a support team member did a good or bad job.
 """
 

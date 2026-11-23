@@ -47,10 +47,10 @@ The Ticket Explorer was additionally checked with:
 Observed clean-baseline metrics:
 
 - Total cases: 400
-- Open / in progress: 89
-- Resolution rate: 77.8%
-- High experience risk: 7
-- Poor despite resolved: 12
+- Open / in progress: 80
+- Resolution rate: 80.0%
+- High experience risk: 17
+- Poor despite resolved: 20
 
 ## Case-submission flow test
 
@@ -80,6 +80,8 @@ The running application was opened in Chromium at 1050 x 1004 and visually check
 - Raise New Case
 
 The hero, KPI cards, navigation, charts and form were readable without overlap or clipping in the checked viewport. The live local test URL is not a public deployment URL and is therefore not included as a submission link.
+
+The later portfolio cleanup aligned the hero and insight-card group through one shared `width: 100%` and `box-sizing: border-box` rule. The two insight cards use equal grid tracks, equal stretch height and a non-layout-shifting accent. All six pages were rerun through Streamlit's application-testing framework after this change with zero exceptions. A final visual confirmation on the deployed URL remains pending.
 
 ## Repository checks
 

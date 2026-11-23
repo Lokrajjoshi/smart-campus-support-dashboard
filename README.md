@@ -1,9 +1,5 @@
 # Smart Campus Support & Student Experience Dashboard
 
-**Register number:** 2647136  
-**Course:** MCA Python Programming (MCA411-2), CIA 3  
-**Final submission deadline in the supplied brief:** 29 November 2026
-
 ## Core question
 
 Why can students have a poor support experience even when their ticket is marked resolved?
@@ -28,11 +24,11 @@ Covered services: Wi-Fi/IT, Academic/LMS, Library, Hostel, Transport, Fees, Clas
 
 ## Data ethics and limitations
 
-The baseline is a reproducible **synthetic dataset of 400 campus support cases**. It is not real CHRIST University operational data. It contains no student names, IDs, emails or phone numbers. The application asks users not to enter personal data.
+The baseline is a reproducible **synthetic dataset of 400 campus support cases**. It is not real university operational data. It contains no student names, IDs, emails or phone numbers. The application asks users not to enter personal data.
 
 “Real-time” means live updates after a user submits a case: SQLite stores the record and the app reruns so its KPIs, explorer and charts include the new case. The project does **not** claim access to a university live feed.
 
-Each dataset row is a current ticket snapshot. The allowed lifecycle is `Open → In Progress → Resolved → Closed`; a reopened resolved case returns to active handling before it can be resolved again. The application validates lifecycle-dependent fields: unresolved cases have no resolution time or satisfaction, while resolved/closed cases have resolution details. A full event-history or staff administration system is intentionally outside this CIA dashboard's scope.
+Each dataset row is a current ticket snapshot. The allowed lifecycle is `Open → In Progress → Resolved → Closed`; a reopened resolved case returns to active handling before it can be resolved again. The application validates lifecycle-dependent fields: unresolved cases have no resolution time or satisfaction, while resolved/closed cases have resolution details. A full event-history or staff administration system is intentionally outside this dashboard's scope.
 
 ## Run locally
 
@@ -58,7 +54,7 @@ pytest -q
 
 Tests check reproducible generation, lifecycle-consistent fields, risk boundaries, missing satisfaction, invalid service/category combinations and real database persistence.
 
-See `TESTING.md` for the verified results and `VIVA_PREPARATION.md` for concise presentation answers.
+See `TESTING.md` for verified results and `PROJECT_WALKTHROUGH.md` for concise technical explanations.
 
 ## Risk rule
 
@@ -103,4 +99,4 @@ SQLite persists case submissions while the running app instance retains its file
 
 ## Research connection
 
-This dashboard is a distinct CIA 3 project. Its rationale is an applied extension of CarePulse research into why technically resolved IT support tickets may still frustrate users.
+This dashboard is a distinct support-experience analytics project. Its rationale is an applied extension of CarePulse research into why technically resolved IT support tickets may still frustrate users.

@@ -42,7 +42,7 @@ DESCRIPTIONS = {
 }
 
 
-def generate_cases(count: int = 400, seed: int = 2647136) -> pd.DataFrame:
+def generate_cases(count: int = 400, seed: int = 20261120) -> pd.DataFrame:
     random.seed(seed)
     end = datetime(2026, 11, 20, 18, 0)
     rows = []

@@ -23,7 +23,8 @@ st.markdown("""
   [data-testid="stSidebar"] button {border-color:rgba(255,255,255,.30) !important;}
   .block-container {padding-top:1.45rem;padding-bottom:3rem;max-width:1500px;}
   h1,h2,h3 {letter-spacing:-.025em;color:#172033;} p,label,.stCaption {color:#475569;}
-  .hero {position:relative;overflow:hidden;padding:2rem 2.1rem;border-radius:26px;color:white;background:linear-gradient(120deg,#112451 0%,#2456d8 45%,#0891b2 100%);background-size:180% 180%;box-shadow:0 18px 48px rgba(22,57,133,.24);margin-bottom:1.05rem;animation:gradientMove 10s ease infinite;}
+  .hero,.question-grid {width:100%;box-sizing:border-box;}
+  .hero {position:relative;overflow:hidden;padding:2rem 2.1rem;border-radius:26px;color:white;background:linear-gradient(120deg,#112451 0%,#2456d8 45%,#0891b2 100%);background-size:180% 180%;box-shadow:0 18px 48px rgba(22,57,133,.24);margin:0 0 1rem;animation:gradientMove 10s ease infinite;}
   .hero:after {content:"";position:absolute;width:320px;height:320px;border-radius:50%;right:-95px;top:-165px;background:rgba(255,255,255,.12);}
   .hero h1 {color:white;margin:0;font-size:clamp(1.8rem,3vw,2.75rem);line-height:1.08;}.hero p {color:#eaf2ff;margin:.7rem 0 1.05rem;font-size:1rem;}
   .hero-badge {display:inline-block;margin:0 .45rem .25rem 0;padding:.32rem .72rem;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.13);color:white;font-size:.78rem;font-weight:700;}
@@ -41,9 +42,10 @@ st.markdown("""
   @keyframes orbitOne {to{transform:rotateX(67deg) rotateZ(372deg)}}
   @keyframes orbitTwo {to{transform:rotateX(68deg) rotateZ(432deg)}}
   @keyframes dotPulse {0%,100%{transform:scale(.8);opacity:.65}50%{transform:scale(1.25);opacity:1}}
-  .question-grid {display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin:.4rem 0 1rem;}
-  .question-card {background:white;border:1px solid #dce7f5;padding:1rem 1.15rem;border-radius:16px;box-shadow:0 6px 22px rgba(30,64,175,.07);color:#334155;}
-  .question-card strong {display:block;color:#173b7a;margin-bottom:.25rem;}.question-card.answer {border-left:5px solid #0ea5a8;}
+  .question-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;align-items:stretch;margin:0 0 1.2rem;}
+  .question-card {position:relative;box-sizing:border-box;min-width:0;height:100%;background:white;border:1px solid #dce7f5;padding:1rem 1.15rem;border-radius:18px;box-shadow:0 6px 22px rgba(30,64,175,.07);color:#334155;}
+  .question-card strong {display:block;color:#173b7a;margin-bottom:.25rem;}
+  .question-card.answer:before {content:"";position:absolute;inset:0 auto 0 0;width:5px;border-radius:18px 0 0 18px;background:#0ea5a8;}
   .section-heading {margin:1.25rem 0 .7rem;}.section-heading h2 {font-size:1.32rem;margin:0;color:#172033;}.section-heading p {margin:.18rem 0 0;font-size:.9rem;color:#64748b;}
   div[data-testid="stMetric"] {background:white;padding:1rem 1.05rem;border-radius:17px;box-shadow:0 7px 24px rgba(22,54,112,.08);border:1px solid #e0e9f5;min-height:118px;transition:transform .25s ease,box-shadow .25s ease;transform-style:preserve-3d;}
   div[data-testid="stMetric"]:hover {transform:perspective(700px) translateY(-5px) rotateX(2deg) rotateY(-2deg);box-shadow:0 16px 34px rgba(22,54,112,.15);}
@@ -145,7 +147,7 @@ with st.sidebar:
     st.markdown("🟠 **Medium:** 25–49 points")
     st.markdown("🔴 **High:** 50–100 points")
     st.markdown("---")
-    st.caption("Synthetic demonstration data — not CHRIST University operational data.")
+    st.caption("Synthetic demonstration data — not real university operational data.")
 
 st.markdown("""
 <div class="hero"><div class="hero-grid">
@@ -153,7 +155,6 @@ st.markdown("""
     <span class="hero-badge">LIVE USER-ACTION UPDATES</span><span class="hero-badge">PRIVACY-AWARE</span><span class="hero-badge">EXPLAINABLE RISK</span>
     <h1>Smart Campus Support &<br>Student Experience Dashboard</h1>
     <p>See beyond ticket closure and understand how students actually experienced campus support.</p>
-    <span class="hero-badge">2647136</span><span class="hero-badge">MCA Python Programming CIA 3</span>
   </div>
   <div class="pulse-scene" aria-label="Animated student experience pulse">
     <div class="orbit one"><span class="orbit-dot"></span></div><div class="orbit two"></div><div class="pulse-core"></div><div class="pulse-label">Experience Pulse</div>
@@ -626,7 +627,7 @@ elif page == "ℹ️ About & Method":
             language="text",
         )
     with st.expander("Research connection"):
-        st.write("This CIA application is an applied extension of the CarePulse research rationale about why technically resolved support tickets may still frustrate users. It remains a distinct MCA Python project.")
+        st.write("This project is an applied extension of the CarePulse research rationale about why technically resolved support tickets may still frustrate users. It remains a distinct support-experience analytics application.")
     with st.expander("Important limitation"):
-        st.write("The baseline is synthetic and demonstrates the analytical method; it does not measure actual CHRIST University performance. A production system would require approved, anonymised university data and durable managed storage.")
+        st.write("The baseline is synthetic and demonstrates the analytical method; it does not measure actual university performance. A production system would require approved, anonymised university data and durable managed storage.")
 
