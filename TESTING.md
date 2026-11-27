@@ -1,6 +1,6 @@
 # Test Evidence
 
-Latest verification: 23 November 2026.
+Latest verification: 27 November 2026.
 
 ## Automated results
 
@@ -37,7 +37,7 @@ The application was run through Streamlit's application-testing framework.
 
 The enhanced interface was also checked for reliable light-mode contrast, sidebar rendering, six labelled navigation pages, chart theming and responsive card layout. Read-only reopened values are displayed as Yes/No text rather than misleading checkbox controls.
 
-The final navigation redesign was checked page by page: Overview, Ticket Explorer, Service Analytics, Experience Analytics, Raise New Case and About & Method all rendered with zero Streamlit exceptions. The pure-CSS Experience Pulse and card-depth effects do not change the analytical logic or database behaviour.
+The final navigation design was checked page by page: Overview, Ticket Explorer, Service Analytics, Experience Analytics, Raise New Case and About & Method all rendered with zero Streamlit exceptions. Decorative motion and 3D effects were deliberately removed so that the interface remains focused, explainable and suitable for an academic demonstration.
 
 The Ticket Explorer was additionally checked with:
 
@@ -81,7 +81,7 @@ The running application was opened in Chromium at 1050 x 1004 and visually check
 
 The hero, KPI cards, navigation, charts and form were readable without overlap or clipping in the checked viewport. The live local test URL is not a public deployment URL and is therefore not included as a submission link.
 
-The later portfolio cleanup aligned the hero and insight-card group through one shared `width: 100%` and `box-sizing: border-box` rule. The two insight cards use equal grid tracks, equal stretch height and a non-layout-shifting accent. All six pages were rerun through Streamlit's application-testing framework after this change with zero exceptions. A final visual confirmation on the deployed URL remains pending.
+The portfolio cleanup aligned the hero and insight-card group through one shared `width: 100%` and `box-sizing: border-box` rule. The two insight cards use equal grid tracks, equal stretch height and a non-layout-shifting accent. The animated orbit, moving gradient and 3D card tilt were removed; the hero now shows the five experience signals used by the risk rule. All six pages were rerun through Streamlit's application-testing framework after this change with zero exceptions. A final visual confirmation on the deployed URL remains pending.
 
 ## Repository checks
 

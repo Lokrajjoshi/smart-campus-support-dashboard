@@ -12,7 +12,7 @@ Why can students have a poor support experience even when their ticket is marked
 - Uses a responsive, student-friendly interface with reliable light-mode contrast.
 - Provides live system status, quick service insights and interactive chart tooltips.
 - Uses the left sidebar as true six-page navigation instead of decorative content.
-- Includes lightweight CSS animation and 3D hover depth with no extra JavaScript framework.
+- Uses focused, consistent styling that keeps attention on the support data and analysis.
 - Provides a searchable and filterable ticket explorer.
 - Compares campus services by volume, resolution, speed, satisfaction and risk.
 - Analyses waiting, handoffs, follow-ups, reopened cases and satisfaction.

@@ -24,31 +24,23 @@ st.markdown("""
   .block-container {padding-top:1.45rem;padding-bottom:3rem;max-width:1500px;}
   h1,h2,h3 {letter-spacing:-.025em;color:#172033;} p,label,.stCaption {color:#475569;}
   .hero,.question-grid {width:100%;box-sizing:border-box;}
-  .hero {position:relative;overflow:hidden;padding:2rem 2.1rem;border-radius:26px;color:white;background:linear-gradient(120deg,#112451 0%,#2456d8 45%,#0891b2 100%);background-size:180% 180%;box-shadow:0 18px 48px rgba(22,57,133,.24);margin:0 0 1rem;animation:gradientMove 10s ease infinite;}
+  .hero {position:relative;overflow:hidden;padding:2rem 2.1rem;border-radius:24px;color:white;background:linear-gradient(120deg,#112451 0%,#2456d8 58%,#087f9c 100%);box-shadow:0 14px 34px rgba(22,57,133,.20);margin:0 0 1rem;}
   .hero:after {content:"";position:absolute;width:320px;height:320px;border-radius:50%;right:-95px;top:-165px;background:rgba(255,255,255,.12);}
-  .hero h1 {color:white;margin:0;font-size:clamp(1.8rem,3vw,2.75rem);line-height:1.08;}.hero p {color:#eaf2ff;margin:.7rem 0 1.05rem;font-size:1rem;}
-  .hero-badge {display:inline-block;margin:0 .45rem .25rem 0;padding:.32rem .72rem;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.13);color:white;font-size:.78rem;font-weight:700;}
-  .hero-grid {display:grid;grid-template-columns:minmax(0,1.5fr) minmax(230px,.55fr);align-items:center;gap:1.4rem;position:relative;z-index:2;}
-  .pulse-scene {height:220px;position:relative;display:flex;align-items:center;justify-content:center;perspective:700px;}
-  .pulse-core {position:absolute;width:74px;height:74px;border-radius:24px;background:linear-gradient(145deg,#fff,#7dd3fc);box-shadow:0 0 35px rgba(125,211,252,.75),inset 0 0 15px rgba(37,99,235,.28);transform:rotate(45deg);animation:coreFloat 3.4s ease-in-out infinite;}
-  .pulse-core:after {content:"CX";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#173b7a;font-size:1.05rem;font-weight:900;transform:rotate(-45deg);}
-  .orbit {position:absolute;border:1.5px solid rgba(255,255,255,.48);border-radius:50%;transform-style:preserve-3d;}
-  .orbit.one {width:140px;height:140px;transform:rotateX(67deg) rotateZ(12deg);animation:orbitOne 9s linear infinite;}
-  .orbit.two {width:190px;height:190px;transform:rotateX(68deg) rotateZ(72deg);animation:orbitTwo 12s linear infinite reverse;}
-  .orbit-dot {position:absolute;width:13px;height:13px;border-radius:50%;background:#fbbf24;box-shadow:0 0 18px #fbbf24;top:19px;left:45px;animation:dotPulse 1.8s ease-in-out infinite;}
-  .pulse-label {position:absolute;bottom:3px;color:#e0f2fe;font-size:.73rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;}
-  @keyframes gradientMove {0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-  @keyframes coreFloat {0%,100%{transform:rotate(45deg) translateY(0)}50%{transform:rotate(45deg) translate(-7px,7px)}}
-  @keyframes orbitOne {to{transform:rotateX(67deg) rotateZ(372deg)}}
-  @keyframes orbitTwo {to{transform:rotateX(68deg) rotateZ(432deg)}}
-  @keyframes dotPulse {0%,100%{transform:scale(.8);opacity:.65}50%{transform:scale(1.25);opacity:1}}
+  .hero h1 {color:white;margin:.35rem 0 0;font-size:clamp(1.8rem,3vw,2.75rem);line-height:1.08;}.hero p {color:#eaf2ff;margin:.8rem 0 0;font-size:1rem;max-width:720px;}
+  .hero-kicker {color:#bae6fd;font-size:.78rem;font-weight:800;letter-spacing:.10em;text-transform:uppercase;}
+  .hero-grid {display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,.65fr);align-items:center;gap:1.8rem;position:relative;z-index:2;}
+  .signal-panel {background:rgba(8,35,82,.34);border:1px solid rgba(255,255,255,.24);border-radius:18px;padding:1rem 1.05rem;}
+  .signal-panel strong {display:block;color:white;margin-bottom:.65rem;font-size:.92rem;}
+  .signal-grid {display:grid;grid-template-columns:1fr 1fr;gap:.5rem;}
+  .signal-item {padding:.48rem .6rem;border-radius:10px;background:rgba(255,255,255,.10);color:#eaf2ff;font-size:.78rem;border:1px solid rgba(255,255,255,.10);}
+  .signal-item:last-child {grid-column:1 / -1;}
   .question-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;align-items:stretch;margin:0 0 1.2rem;}
   .question-card {position:relative;box-sizing:border-box;min-width:0;height:100%;background:white;border:1px solid #dce7f5;padding:1rem 1.15rem;border-radius:18px;box-shadow:0 6px 22px rgba(30,64,175,.07);color:#334155;}
   .question-card strong {display:block;color:#173b7a;margin-bottom:.25rem;}
   .question-card.answer:before {content:"";position:absolute;inset:0 auto 0 0;width:5px;border-radius:18px 0 0 18px;background:#0ea5a8;}
   .section-heading {margin:1.25rem 0 .7rem;}.section-heading h2 {font-size:1.32rem;margin:0;color:#172033;}.section-heading p {margin:.18rem 0 0;font-size:.9rem;color:#64748b;}
-  div[data-testid="stMetric"] {background:white;padding:1rem 1.05rem;border-radius:17px;box-shadow:0 7px 24px rgba(22,54,112,.08);border:1px solid #e0e9f5;min-height:118px;transition:transform .25s ease,box-shadow .25s ease;transform-style:preserve-3d;}
-  div[data-testid="stMetric"]:hover {transform:perspective(700px) translateY(-5px) rotateX(2deg) rotateY(-2deg);box-shadow:0 16px 34px rgba(22,54,112,.15);}
+  div[data-testid="stMetric"] {background:white;padding:1rem 1.05rem;border-radius:17px;box-shadow:0 7px 24px rgba(22,54,112,.08);border:1px solid #e0e9f5;min-height:118px;transition:transform .18s ease,box-shadow .18s ease;}
+  div[data-testid="stMetric"]:hover {transform:translateY(-2px);box-shadow:0 11px 28px rgba(22,54,112,.12);}
   div[data-testid="stMetric"] label,div[data-testid="stMetric"] [data-testid="stMetricLabel"] * {color:#64748b !important;font-weight:700 !important;}
   div[data-testid="stMetric"] [data-testid="stMetricValue"] * {color:#172033 !important;} div[data-testid="stMetricDelta"] * {color:#0f766e !important;}
   .mini-card {height:100%;background:white;border:1px solid #e0e9f5;border-radius:17px;padding:1rem 1.05rem;box-shadow:0 7px 24px rgba(22,54,112,.07);}
@@ -57,7 +49,7 @@ st.markdown("""
   .step-card {background:#eff6ff;border:1px solid #bfdbfe;border-radius:16px;padding:1rem 1.1rem;color:#1e3a5f;margin-bottom:.6rem}.step-number {display:inline-flex;align-items:center;justify-content:center;width:25px;height:25px;border-radius:50%;background:#2563eb;color:white;font-weight:800;margin-right:.45rem}
   [data-testid="stSidebar"] [role="radiogroup"] {gap:.38rem;}
   [data-testid="stSidebar"] [role="radiogroup"] label {background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:.58rem .65rem;transition:.2s;}
-  [data-testid="stSidebar"] [role="radiogroup"] label:hover {background:rgba(255,255,255,.16);transform:translateX(4px);}
+  [data-testid="stSidebar"] [role="radiogroup"] label:hover {background:rgba(255,255,255,.16);}
   [data-testid="stSidebar"] [role="radiogroup"] label:has(input:checked) {background:linear-gradient(90deg,rgba(59,130,246,.55),rgba(14,165,233,.28));border-color:rgba(255,255,255,.36);box-shadow:0 7px 20px rgba(0,0,0,.14);}
   [data-testid="stSidebar"] .stButton button {background:rgba(255,255,255,.13) !important;color:white !important;border:1px solid rgba(255,255,255,.28) !important;}
   [data-testid="stSidebar"] .stButton button:hover {background:rgba(255,255,255,.23) !important;transform:translateY(-1px);}
@@ -65,7 +57,7 @@ st.markdown("""
   [data-testid="stForm"] {background:white;border:1px solid #dce7f5;border-radius:20px;padding:1.25rem;box-shadow:0 8px 28px rgba(22,54,112,.08)}
   [data-baseweb="input"]>div,[data-baseweb="select"]>div,textarea {background:white !important;color:#172033 !important} input,textarea {color:#172033 !important;-webkit-text-fill-color:#172033 !important}
   [data-testid="stExpander"] {background:white;border-radius:15px;border:1px solid #e0e9f5}.stAlert {border-radius:15px} footer {visibility:hidden}
-  @media(max-width:900px){.question-grid,.hero-grid{grid-template-columns:1fr}.pulse-scene{height:150px}.hero{padding:1.4rem}.block-container{padding-left:1rem;padding-right:1rem}}
+  @media(max-width:900px){.question-grid,.hero-grid{grid-template-columns:1fr}.hero{padding:1.4rem}.block-container{padding-left:1rem;padding-right:1rem}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -118,7 +110,7 @@ poor_resolved = df[resolved_mask & ((df.satisfaction <= 2) | (df.risk_level == "
 
 with st.sidebar:
     st.markdown("## 🎓 Campus Support")
-    st.caption("Student Experience Intelligence")
+    st.caption("Support and experience analytics")
     st.markdown("---")
     st.markdown("### Navigate")
     page = st.radio(
@@ -152,12 +144,19 @@ with st.sidebar:
 st.markdown("""
 <div class="hero"><div class="hero-grid">
   <div>
-    <span class="hero-badge">LIVE USER-ACTION UPDATES</span><span class="hero-badge">PRIVACY-AWARE</span><span class="hero-badge">EXPLAINABLE RISK</span>
+    <div class="hero-kicker">Campus support analytics</div>
     <h1>Smart Campus Support &<br>Student Experience Dashboard</h1>
     <p>See beyond ticket closure and understand how students actually experienced campus support.</p>
   </div>
-  <div class="pulse-scene" aria-label="Animated student experience pulse">
-    <div class="orbit one"><span class="orbit-dot"></span></div><div class="orbit two"></div><div class="pulse-core"></div><div class="pulse-label">Experience Pulse</div>
+  <div class="signal-panel" aria-label="Experience signals used in the dashboard">
+    <strong>Experience signals</strong>
+    <div class="signal-grid">
+      <div class="signal-item">Waiting time</div>
+      <div class="signal-item">Handoffs</div>
+      <div class="signal-item">Follow-ups</div>
+      <div class="signal-item">Reopened cases</div>
+      <div class="signal-item">Student satisfaction</div>
+    </div>
   </div>
 </div>
 </div>
@@ -630,4 +629,3 @@ elif page == "ℹ️ About & Method":
         st.write("This project is an applied extension of the CarePulse research rationale about why technically resolved support tickets may still frustrate users. It remains a distinct support-experience analytics application.")
     with st.expander("Important limitation"):
         st.write("The baseline is synthetic and demonstrates the analytical method; it does not measure actual university performance. A production system would require approved, anonymised university data and durable managed storage.")
-
